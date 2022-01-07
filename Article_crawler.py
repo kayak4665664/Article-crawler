@@ -5,11 +5,11 @@ import os
 import sys
 
 urls = {}
-urls_path = os.path.split(os.path.realpath(sys.argv[0]))[0] + "\\" + "urls.txt"
+urls_path = os.path.split(os.path.realpath(sys.argv[0]))[0] + "/" + "urls.txt"
 url_str = "源地址"
 keywords = []
 keywords_path = os.path.split(os.path.realpath(sys.argv[0]))[
-    0] + "\\" + "keywords.txt"
+    0] + "/" + "keywords.txt"
 keyword_str = "关键词"
 search_by_keywords = False
 
@@ -46,7 +46,7 @@ def add(str, func):
     print("\n每行输入" + str + "，输入‘0’时结束输入\n")
     while True:
         tmp_str = input(str + "：")
-        if tmp_str is "0":
+        if tmp_str == "0":
             return
         func(tmp_str)
 
@@ -61,7 +61,7 @@ def remove(str, container, func):
     print("\n每行输入要移除的" + str + ",输入‘0’时结束输入\n")
     while True:
         tmp_str = input(str + "：")
-        if tmp_str is "0":
+        if tmp_str == "0":
             return
         if tmp_str not in container:
             print("\n输入错误，请重新输入！\n")
@@ -83,7 +83,7 @@ def tmp_menu(str):
 
 def main_menu(str):
     tmp_str = "开启"
-    if search_by_keywords is True:
+    if search_by_keywords == True:
         tmp_str = "关闭"
     print("        XX阅读")
     print(" - - - - - - - - - - - - - -")
@@ -102,7 +102,7 @@ def format_menu(func, str):
     func(str)
     print("============================")
     limit = 3
-    if str is None:
+    if str == None:
         limit = 4
     while True:
         num = int(input("\n输入序号："))
@@ -113,11 +113,11 @@ def format_menu(func, str):
 def edit(str, container, func1, func2, func3):
     while True:
         num = format_menu(tmp_menu, str)
-        if num is 1:
+        if num == 1:
             add(str, func1)
-        elif num is 2:
+        elif num == 2:
             remove(str, container, func2)
-        elif num is 3:
+        elif num == 3:
             func3()
         else:
             print("\n返回主菜单!\n")
@@ -202,15 +202,15 @@ def get_article(url_name, url):
     paper = build_soup(url)
     if paper is not None:
         for item in paper.find_all("a", attrs={"href": True}):
-            if item.string is not None and "http" in item.get("href") and (search_by_keywords is False or include_keyword(item.string)):
+            if item.string is not None and "http" in item.get("href") and (search_by_keywords == False or include_keyword(item.string)):
                 article = build_soup(item.get("href"))
                 if article is not None:
                     paragraphs = article.find_all("p")
-                    if len(paragraphs) is not 0:
+                    if len(paragraphs) != 0:
                         cnt += 1
                         print(url_name + "_" + item.string)
                         file_path = os.path.split(os.path.realpath(sys.argv[0]))[
-                            0] + "\\" + re.sub(r"[\/\\\:\*\?\"\<\>\|]", "", url_name + "_" + item.string) + ".txt"
+                            0] + "/" + re.sub(r"[\/\\\:\*\?\"\<\>\|]", "", url_name + "_" + item.string) + ".txt"
                         with open(file_path, "w", encoding="utf-8") as file_object:
                             for paragraph in paragraphs:
                                 if paragraph.string is not None:
@@ -220,7 +220,7 @@ def get_article(url_name, url):
 
 
 def search_article():
-    if len(urls) <= 0 or (search_by_keywords is True and len(keywords) <= 0):
+    if len(urls) <= 0 or (search_by_keywords == True and len(keywords) <= 0):
         print("\n请先完善源地址或关键词！\n")
         return
     print("\n正在为您搜索文章......\n")
@@ -228,7 +228,7 @@ def search_article():
     for url_name in urls:
         url = urls[url_name]
         cnt += get_article(url_name, url)
-    if cnt is 0:
+    if cnt == 0:
         print("\n暂时没有文章，请稍后再试！\n")
     else:
         print("\n已结束搜索！合理安排时间，享受健康生活！\n")
@@ -238,14 +238,14 @@ init()
 
 while True:
     num = format_menu(main_menu, None)
-    if num is 1:
+    if num == 1:
         search_article()
-    elif num is 2:
+    elif num == 2:
         edit(url_str, urls, add_url, remove_url, clean_all_urls)
-    elif num is 3:
+    elif num == 3:
         edit(keyword_str, keywords, add_keyword,
              remove_keyword, clean_all_keywords)
-    elif num is 4:
+    elif num == 4:
         search_by_keywords = not search_by_keywords
     else:
         end()
